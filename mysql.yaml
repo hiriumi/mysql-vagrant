@@ -6,6 +6,11 @@
           - MySQL-python
           - mysql
           - mysql-server
+          - python39
+          - python39-devel
+          - python39-pip
+          - gcc
+        state: latest
     - name: Start the MySQL service
       action: service name=mysqld state=started
     
