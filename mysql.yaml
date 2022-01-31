@@ -1,16 +1,37 @@
-- hosts: all
+- name: Install the latest version of Apache
+  hosts: all
+  become: true
   tasks:
-    - name: Install MySQL
-      action: yum name={{ item }}
+    - name: install repo
+      shell: rpm -Uvh http://dev.mysql.com/get/mysql57-community-release-el6-7.noarch.rpm
+    - name: install packages
+      yum:
+        name: "{{ item }}"
+        state: present
+        update_cache: True
       with_items:
-        - MySQL-python
         - mysql
-        - mysql-server
-        - python39
-        - python39-devel
-        - python39-pip
-        - gcc
-      state: latest
+        - mysql-community-server
+
     - name: Start the MySQL service
-      action: service name=mysqld state=started
+      service: 
+        name: mysqld
+        state: started
+        enabled: true
+
+# - name: Install MySQL 
+#   hosts: all
+#   become: true
+#     yum: 
+#     name:
+#       - MySQL-python
+#       - mysql
+#       - mysql-server
+#       - python39
+#       - python39-devel
+#       - python39-pip
+#       - gcc
+#     state: latest
+# - name: Start the MySQL service
+#   action: service name=mysqld state=started
     
