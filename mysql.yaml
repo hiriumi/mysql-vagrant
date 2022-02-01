@@ -1,23 +1,37 @@
 - name: Install the latest version of Apache
   hosts: all
   become: true
+  vars_files:
+    - vars.yaml
   tasks:
-    - name: install repo
-      shell: rpm -Uvh http://dev.mysql.com/get/mysql57-community-release-el6-7.noarch.rpm
-    - name: install packages
+    - name: Upgrade all packages
       yum:
-        name: "{{ item }}"
-        state: present
-        update_cache: True
-      with_items:
-        - mysql
-        - mysql-community-server
+        name: "*"
+        state: latest
+    # - name: adding MySQL repo
+    #   shell: 'sudo rpm -Uvh http://dev.mysql.com/get/mysql57-community-release-el6-7.noarch.rpm'
+        
+    # - name: Import gpg key
+    #   shell: 'rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022'
+    # - name: install packages
+    #   yum:
+    #     name: ['mysql', 'mysql-server']
+    #     state: present
+    #     update_cache: True
+    # - name: Start the MySQL service
+    #   service: 
+    #     name: mysqld
+    #     state: started
+    #     enabled: true
+    # - name: Set MySQL root Password
+    #   mysql_user:
+    #     login_host: 'localhost'
+    #     login_user: 'root'
+    #     login_password: ''
+    #     name: 'root'
+    #     password: '{{ mysql_root_password }}'
+    #     state: present
 
-    - name: Start the MySQL service
-      service: 
-        name: mysqld
-        state: started
-        enabled: true
 
 # - name: Install MySQL 
 #   hosts: all
