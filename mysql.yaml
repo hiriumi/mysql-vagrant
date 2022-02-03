@@ -28,7 +28,7 @@
     - name: untar MySQL binary
       become: true
       unarchive:
-        src: ./files/mysql-8.0.28-linux-glibc2.12-i686.tar.xz
+        src: ./mysql-8.0.28-linux-glibc2.12-i686.tar.xz
         dest: /usr/local/mysql-server
         # cd /usr/local
         # tar xvf /path/to/mysql-VERSION-OS.tar.xz
