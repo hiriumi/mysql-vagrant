@@ -19,18 +19,26 @@
         group: mysql
         shell: /bin/false
         state: present
-    - name: mysql-server dir
-      file:
-        path: /usr/local/mysql-server
-        state: directory
+    - name: untar MySQL binary
+      unarchive:
+        src: "./{{ mysql_file }}.tar.xz"
+        dest: /vagrant/
+        owner: mysql
+        group: mysql
+    - name: "Ensure {{ mysql_dir }}"
+      file: 
+        path: "{{ mysql_dir }}"
         group: mysql
         owner: mysql
-    - name: untar MySQL binary
-      become: true
-      unarchive:
-        src: ./mysql-8.0.28-linux-glibc2.12-i686.tar.xz
-        dest: /usr/local/mysql-server
-        # cd /usr/local
-        # tar xvf /path/to/mysql-VERSION-OS.tar.xz
+        recurse: yes
+        state: directory
+    - name: Copy mysql binary files
+      copy:
+        directory_mode: 
+        src: "./{{ mysql_file }}/"
+        dest: "{{ mysql_dir }}"
+        owner: mysql
+        group: mysql
+
 
         
