@@ -1,4 +1,4 @@
-- name: Install the latest version of Apache
+- name: Install MySQL on Vagrant
   hosts: all
   become: true
   vars_files:
@@ -8,44 +8,29 @@
       yum:
         name: "*"
         state: latest
-    # - name: adding MySQL repo
-    #   shell: 'sudo rpm -Uvh http://dev.mysql.com/get/mysql57-community-release-el6-7.noarch.rpm'
+    - name: Add group
+      group:
+        name: mysql
+        state: present
+    - name: Add mysql user
+      user:
+        name: mysql
+        system: True
+        group: mysql
+        shell: /bin/false
+        state: present
+    - name: mysql-server dir
+      file:
+        path: /usr/local/mysql-server
+        state: directory
+        group: mysql
+        owner: mysql
+    - name: untar MySQL binary
+      become: true
+      unarchive:
+        src: ./files/mysql-8.0.28-linux-glibc2.12-i686.tar.xz
+        dest: /usr/local/mysql-server
+        # cd /usr/local
+        # tar xvf /path/to/mysql-VERSION-OS.tar.xz
+
         
-    # - name: Import gpg key
-    #   shell: 'rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022'
-    # - name: install packages
-    #   yum:
-    #     name: ['mysql', 'mysql-server']
-    #     state: present
-    #     update_cache: True
-    # - name: Start the MySQL service
-    #   service: 
-    #     name: mysqld
-    #     state: started
-    #     enabled: true
-    # - name: Set MySQL root Password
-    #   mysql_user:
-    #     login_host: 'localhost'
-    #     login_user: 'root'
-    #     login_password: ''
-    #     name: 'root'
-    #     password: '{{ mysql_root_password }}'
-    #     state: present
-
-
-# - name: Install MySQL 
-#   hosts: all
-#   become: true
-#     yum: 
-#     name:
-#       - MySQL-python
-#       - mysql
-#       - mysql-server
-#       - python39
-#       - python39-devel
-#       - python39-pip
-#       - gcc
-#     state: latest
-# - name: Start the MySQL service
-#   action: service name=mysqld state=started
-    
