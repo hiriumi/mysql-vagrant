@@ -12,7 +12,7 @@ This repo lets you automatically provision a Oracle Linux 7 VM with Vagrant and 
 1. Change directory into the directory where you cloned this repo.
 2. Execute vagrant_mysql.sh This script installs Ansible in a Python virtual environment and starts a vagrant VM.
     ```
-    ./vagrant_mysql.sh
+    source ./vagrant_mysql.sh
     ```
 3. Vagrantfile automatically provisions an Oracle Linux 7 VM and it picks up `mysql.yaml` and installs everything you need to get MySQL 8 Community edition up and running. Here are things that happens when `mysql.yaml` is executed on the VM.
     * Copy mysql80-community-release-el7-5.noarch.rpm to /root on the VM. It is used to install the yum repo for MySQL Server 8 Community edition.
