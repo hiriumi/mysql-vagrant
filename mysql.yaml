@@ -20,27 +20,23 @@
       yum:
         name: mysql-server
         state: latest
-     
-    # - name: Add group
-    #   group:
-    #     name: mysql
-    #     state: present
-    # - name: Add mysql user
-    #   user:
-    #     name: mysql
-    #     system: True
-    #     group: mysql
-    #     shell: /bin/false
-    #     state: present
-    # - name: Copy mysql binary files
-    #   copy:
-    #     directory_mode: 
-    #     src: "./{{ mysql_file }}/"
-    #     dest: "{{ mysql_dir }}"
-    #     owner: mysql
-    #     group: mysql
-    # - name: Initialize MySQL
-    #   shell: "{{ mysql_dir }}/bin/mysqld --initialize --user=mysql"
-    
-
-        
+    - name: Empty /var/lib/mysql directory
+      shell: rm -rf /var/lib/mysql/*
+    - name: Set default password
+      copy:
+        dest: /root/mysql-init
+        content: "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('{{ mysql_root_password }}');"
+    - name: Initialize MySQL
+      shell: mysqld --user=root --init-file /root/mysql-init
+    - name: Set passwordless login
+      copy:
+        dest: /root/.my.cnf
+        content: |
+          [client]
+          password = {{ mysql_root_password }}
+        mode: 600
+    - name: Enable and start mysqld
+      systemd:
+        name: mysqld
+        enabled: yes
+        state: started
