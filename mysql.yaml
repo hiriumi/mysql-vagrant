@@ -4,41 +4,43 @@
   vars_files:
     - vars.yaml
   tasks:
+    - name: Copy the rpm file
+      copy: 
+        src: ./mysql80-community-release-el7-5.noarch.rpm
+        dest: ~/
     - name: Upgrade all packages
       yum:
         name: "*"
         state: latest
-    - name: Add group
-      group:
-        name: mysql
+    - name: Install the repo
+      yum: 
+        name: /root/mysql80-community-release-el7-5.noarch.rpm
         state: present
-    - name: Add mysql user
-      user:
-        name: mysql
-        system: True
-        group: mysql
-        shell: /bin/false
-        state: present
-    - name: untar MySQL binary
-      unarchive:
-        src: "./{{ mysql_file }}.tar.xz"
-        dest: /vagrant/
-        owner: mysql
-        group: mysql
-    - name: "Ensure {{ mysql_dir }}"
-      file: 
-        path: "{{ mysql_dir }}"
-        group: mysql
-        owner: mysql
-        recurse: yes
-        state: directory
-    - name: Copy mysql binary files
-      copy:
-        directory_mode: 
-        src: "./{{ mysql_file }}/"
-        dest: "{{ mysql_dir }}"
-        owner: mysql
-        group: mysql
-
+    - name: Install MySQL Server
+      yum:
+        name: mysql-server
+        state: latest
+     
+    # - name: Add group
+    #   group:
+    #     name: mysql
+    #     state: present
+    # - name: Add mysql user
+    #   user:
+    #     name: mysql
+    #     system: True
+    #     group: mysql
+    #     shell: /bin/false
+    #     state: present
+    # - name: Copy mysql binary files
+    #   copy:
+    #     directory_mode: 
+    #     src: "./{{ mysql_file }}/"
+    #     dest: "{{ mysql_dir }}"
+    #     owner: mysql
+    #     group: mysql
+    # - name: Initialize MySQL
+    #   shell: "{{ mysql_dir }}/bin/mysqld --initialize --user=mysql"
+    
 
         
