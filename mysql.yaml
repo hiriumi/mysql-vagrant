@@ -20,21 +20,18 @@
       yum:
         name: mysql-server
         state: latest
-    - name: Empty /var/lib/mysql directory
-      shell: rm -rf /var/lib/mysql/*
     - name: Set default password
       copy:
         dest: /root/mysql-init
         content: "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('{{ mysql_root_password }}');"
-    - name: Initialize MySQL
-      shell: mysqld --user=root --init-file /root/mysql-init
     - name: Set passwordless login
       copy:
         dest: /root/.my.cnf
         content: |
           [client]
           password = {{ mysql_root_password }}
-        mode: 600
+    - name: Initialize MySQL
+      shell: mysqld --user=root --init-file /root/mysql-init
     - name: Enable and start mysqld
       systemd:
         name: mysqld
