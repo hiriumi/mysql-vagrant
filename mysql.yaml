@@ -8,32 +8,34 @@
       copy: 
         src: ./mysql80-community-release-el7-5.noarch.rpm
         dest: ~/
-    - name: Upgrade all packages
-      yum:
-        name: "*"
-        state: latest
     - name: Install the repo
       yum: 
         name: /root/mysql80-community-release-el7-5.noarch.rpm
         state: present
+    - name: Upgrade all packages
+      yum:
+        name: "*"
+        state: latest
     - name: Install MySQL Server
       yum:
-        name: mysql-server
+        name: 
+          - mysql-server
+          - vim
+          - htop
         state: latest
-    - name: Set default password
-      copy:
-        dest: /root/mysql-init
-        content: "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('{{ mysql_root_password }}');"
-    - name: Set passwordless login
-      copy:
-        dest: /root/.my.cnf
-        content: |
-          [client]
-          password = {{ mysql_root_password }}
-    - name: Initialize MySQL
-      shell: mysqld --user=root --init-file /root/mysql-init
     - name: Enable and start mysqld
       systemd:
         name: mysqld
         enabled: yes
         state: started
+
+    - name: Detect the initial root password from /var/log/mysqld.log
+      shell: grep -E 'A temporary password is generated for root@localhost' /var/log/mysqld.log | tail -1 | sed 's/^.*{{':'}} //'
+      register: root_pass
+
+    - name: Set passwordless login
+      copy:
+        dest: /root/.my.cnf
+        content: |
+          [client]
+          password = {{ root_pass.stdout }}

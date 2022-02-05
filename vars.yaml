@@ -1,3 +1,1 @@
-mysql_root_password: "Password123!@#$"
-mysql_file: mysql-8.0.28-linux-glibc2.12-i686
 mysql_dir: /var/lib/mysql
