@@ -38,4 +38,4 @@
         dest: /root/.my.cnf
         content: |
           [client]
-          password = {{ root_pass.stdout }}
+          password = "{{ root_pass.stdout }}"
