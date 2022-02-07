@@ -24,7 +24,7 @@ This repo lets you automatically provision a Oracle Linux 7 VM with Vagrant and 
 
 
 ## How to Start to Use mysql Client
-You may want to change the initial password to something else. Here are the steps.
+You may want to change the initial password to something else or just start to use MySQL on the Vagrant VM.
 1. SSH into Vagrant.
     ```
     vagrant ssh
